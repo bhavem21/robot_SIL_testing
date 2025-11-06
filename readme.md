@@ -1,6 +1,7 @@
 Robot Controller Testing Framework
 
-Overview
+Overview:
+
 This project implements a Python-based automated testing framework for evaluating the performance of a robot controller against a simulated robot model. It uses a simulation-in-loop (SiL) approach to validate whether the controller-generated joint trajectories result in accurate end-effector (TCP) positions when executed on the robot's physical model. The framework is designed for function-level evaluation, enabling precise comparison between the controller output and the simulated robot response under various test conditions.
 
 Simulation-in-Loop Workflow

@@ -9,11 +9,11 @@ Each test case follows a structured loop:
 
 Test Configuration
     Test cases are defined in `test_config.yaml` and include:
-    **Initial joint angles**: Specifies the robot's starting configuration for each test.
-    **Target TCP pose**: Defines the desired end-effector position in Cartesian space.
-    **Velocity profile**: Controls the speed of trajectory execution (`slow`, `medium`, or `fast`).
-    **Workspace coverage**: Test cases are distributed across different regions of the robot's workspace to evaluate controller performance under varied spatial conditions.
-    **Deviation threshold**: A configurable limit (in mm) used to determine pass/fail status based on TCP accuracy.
+    Initial joint angles: Specifies the robot's starting configuration for each test.
+    Target TCP pose: Defines the desired end-effector position in Cartesian space.
+    Velocity profile: Controls the speed of trajectory execution (`slow`, `medium`, or `fast`).
+    Workspace coverage: Test cases are distributed across different regions of the robot's workspace to evaluate controller performance under varied spatial conditions.
+    Deviation threshold: A configurable limit (in mm) used to determine pass/fail status based on TCP accuracy.
 
 Controller Execution (compute_control)
     Solves inverse kinematics for the target pose
@@ -21,7 +21,6 @@ Controller Execution (compute_control)
     Computes the reference TCP path via forward kinematics
 
 Robot Simulation (simulate_response)
-
     Uses the same joint trajectory to simulate robot motion
     Adds small deviations to mimic real-world imperfections
     Computes the measured TCP path from simulated joint states

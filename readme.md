@@ -1,33 +1,50 @@
 Overview
-The PITT (Programmable Intelligent Test Toolkit) automated test suite is designed to validate robotic control systems in a Hardware-in-the-Loop (HIL) environment. It simulates sensor inputs, infers hardware responses, and logs structured test data for analysis in Power BI.
 
-Key Features:
-1. Sensor Simulation: Emulates force sensors and camera inputs to test robot behavior under controlled conditions.
+This project implements a Python-based automated testing framework for evaluating the performance of a robot controller against a simulated robot model. It uses a simulation-in-loop (SiL) approach to validate whether the controller-generated joint trajectories result in accurate end-effector (TCP) positions when executed on the robot's physical model.
 
-2. Hardware Inference: Evaluates expected robot responses (e.g., STOPPED, MOVING, REROUTING) based on input logic.
+The framework is designed for function-level evaluation, enabling precise comparison between the controller output and the simulated robot response under various test conditions.
 
-3. Automated Logging: Captures test metadata and sensor values in a structured CSV format.
+Simulation-in-Loop Workflow
+Each test case follows a structured loop:
 
-4. Power BI Integration: Enables real-time analytics and visualization of test outcomes, sensor trends, and failure diagnostics.
+Test Configuration
+    Test cases are defined in `test_config.yaml` and include:
+    **Initial joint angles**: Specifies the robot's starting configuration for each test.
+    **Target TCP pose**: Defines the desired end-effector position in Cartesian space.
+    **Velocity profile**: Controls the speed of trajectory execution (`slow`, `medium`, or `fast`).
+    **Workspace coverage**: Test cases are distributed across different regions of the robot's workspace to evaluate controller performance under varied spatial conditions.
+    **Deviation threshold**: A configurable limit (in mm) used to determine pass/fail status based on TCP accuracy.
 
-Test Workflow
-1. Input Generation
-    Simulated force: {"x": 0, "y": 0, "z": 45}
-    Simulated camera: {"object": "human", "distance": 0.4}
+Controller Execution (compute_control)
+    Solves inverse kinematics for the target pose
+    Generates a joint-space trajectory using jtraj()
+    Computes the reference TCP path via forward kinematics
 
-2. Behavior Evaluation:
-    Logic determines robot status:
-        Human too close → STOPPED
-        Box within 1m → REROUTING
-        Clear path → MOVING
-3. Result Logging
-        Each test logs:
-        Timestamp
-        Test name
-        Sensor inputs (x, y, z, object, distance)
-        Robot status
-        Pass/Fail result
+Robot Simulation (simulate_response)
 
-CSV Output
-File: logs/test_results.csv
+    Uses the same joint trajectory to simulate robot motion
+    Adds small deviations to mimic real-world imperfections
+    Computes the measured TCP path from simulated joint states
 
+Function Evaluation
+    Compares reference and measured TCP paths
+    Calculates deviation using Hausdorff distance or RMSE
+    Validates against a configurable threshold
+
+Logging and Reporting
+    Records test name, reference and measured TCPs, deviation, pass/fail status, and velocity profile
+
+
+The framework supports automated test execution using pytest:
+python run_tests.py
+
+Example Assertion
+assert deviation <= threshold_mm, f"{test['name']} failed: deviation={deviation:.2f} mm"
+
+
+Key Features
+    Function-level evaluation of robot controller output
+    Simulation-in-loop testing with realistic deviations
+    Python automation for scalable test execution
+    Deviation metrics using Hausdorff and RMSE
+    Pytest integration for clean reporting and CI compatibility

@@ -16,10 +16,13 @@ Function evaluation compares the reference and measured TCP paths using metrics 
 Finally, the framework logs the results of each test case, including the test name, reference and measured TCP paths, deviation value, pass/fail status, and velocity profile.
 
 Test Execution
+
 The framework supports automated test execution using pytest. You can run all test cases by executing:
+
 python run_tests.py
 
 Each test includes an assertion to verify that the deviation remains within the acceptable threshold. For example:
+
 assert deviation <= threshold_mm, f"{test['name']} failed: deviation={deviation:.2f} mm"
 
 Key Features

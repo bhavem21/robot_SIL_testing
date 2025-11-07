@@ -1,31 +1,59 @@
-Robot Controller Testing Framework
+# 🤖 Robot Controller Testing Framework
 
-Overview:
+## Overview
 
-This project implements a Python-based automated testing framework for evaluating the performance of a robot controller against a simulated robot model. It uses a simulation-in-loop (SiL) approach to validate whether the controller-generated joint trajectories result in accurate end-effector (TCP) positions when executed on the robot's physical model. The framework is designed for function-level evaluation, enabling precise comparison between the controller output and the simulated robot response under various test conditions.
+This project implements a **Python-based automated testing framework** for evaluating the performance of a robot controller against a simulated robot model. It uses a **simulation-in-loop (SiL)** approach to validate whether the controller-generated joint trajectories result in accurate end-effector (TCP) positions when executed on the robot's physical model.
 
-Simulation-in-Loop Workflow:
+The framework is designed for **function-level evaluation**, enabling precise comparison between the controller output and the simulated robot response under various test conditions.
 
-Each test case follows a structured loop that begins with loading configuration data from a YAML file. The configuration includes the robot's initial joint angles, the target TCP pose in Cartesian space, and a velocity profile that controls the speed of trajectory execution. Test cases are distributed across different regions of the robot's workspace to ensure broad spatial coverage and to evaluate controller performance under varied conditions. A deviation threshold, defined in millimeters, is used to determine whether the measured TCP path is acceptably close to the reference path.
+---
 
-The controller execution phase uses the compute_control function to solve inverse kinematics for the target pose and generate a joint-space trajectory using jtraj(). This trajectory is then used to compute the reference TCP path via forward kinematics.
+##  Simulation-in-Loop Workflow
 
-In the simulation phase, the same joint trajectory is passed to the simulate_response function, which simulates robot motion and introduces small deviations to mimic real-world imperfections. The measured TCP path is computed from the simulated joint states.
+Each test case follows a structured loop:
 
-Function evaluation compares the reference and measured TCP paths using metrics such as Hausdorff distance or root mean square error (RMSE). These metrics are validated against the configured threshold to determine pass or fail status.
+1. **Test Configuration**
+   - Defined in `test_config.yaml`
+   - Includes initial joint angles, target TCP pose, and velocity profile
 
-Finally, the framework logs the results of each test case, including the test name, reference and measured TCP paths, deviation value, pass/fail status, and velocity profile.
+2. **Controller Execution (`compute_control`)**
+   - Solves inverse kinematics for the target pose
+   - Generates a joint-space trajectory using `jtraj()`
+   - Computes the reference TCP path via forward kinematics
 
-Test Execution:
+3. **Robot Simulation (`simulate_response`)**
+   - Uses the same joint trajectory to simulate robot motion
+   - Adds small deviations to mimic real-world imperfections
+   - Computes the measured TCP path from simulated joint states
 
-The framework supports automated test execution using pytest. You can run all test cases by executing:
+4. **Function Evaluation**
+   - Compares reference and measured TCP paths
+   - Calculates deviation using Hausdorff distance or RMSE
+   - Validates against a configurable threshold
 
-python run_tests.py
+5. **Logging and Reporting**
+   - Records test name, reference and measured TCPs, deviation, pass/fail status, and velocity profile
 
-Each test includes an assertion to verify that the deviation remains within the acceptable threshold. For example:
+---
 
-assert deviation <= threshold_mm, f"{test['name']} failed: deviation={deviation:.2f} mm"
+##  Test Configuration Format
 
-Key Features:
+Test cases are defined in `test_config.yaml`:
+
+```yaml
+deviation_threshold_mm: 10
+tests:
+  - name: "Test 1"
+    joint_angles: [0, 0, 0, 0, 0, 0]
+    target_pose: [0.3, -0.4, 0.5]
+    velocity_profile: "medium"
+  - name: "Test 2"
+    joint_angles: [0.1, -0.2, 0.3, -0.1, 0.2, -0.3]
+    target_pose: [0.25, -0.35, 0.45]
+    velocity_profile: "fast"
+
+
+
+## Key Features:
 
 This framework provides function-level evaluation of robot controller output using a simulation-in-loop methodology. It supports realistic deviation modeling, scalable test execution through Python automation, and robust deviation analysis using Hausdorff distance and RMSE. Integration with pytest ensures clean reporting and compatibility with continuous integration workflows.

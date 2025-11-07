@@ -1,4 +1,4 @@
-# 🤖 Robot Controller Testing Framework
+# Simulation-in-Loop Robot Testing Framework
 
 ## Overview
 
@@ -51,26 +51,61 @@ tests:
     joint_angles: [0.1, -0.2, 0.3, -0.1, 0.2, -0.3]
     target_pose: [0.25, -0.35, 0.45]
     velocity_profile: "fast"
+```
 
 
 ## Pytest Integration
 
 ```bash
 pytest run_tests.py
-
+```
 
 ## Example Assertion
+```
 assert deviation <= threshold_mm, f"{test['name']} failed: deviation={deviation:.2f} mm"
+```
 
+## Project Structure
+
+The repository is organized to support modular development and testing of the robot controller using a simulation-in-loop approach. Each directory and file serves a specific role in the testing pipeline:
+
+```text
+robot_SIL_testing/
+├── controller/
+│   └── controller.py
+│       Contains the `compute_control()` function that performs inverse kinematics and generates joint-space trajectories.
+├── log_Results/
+│   └── model_results.csv
+│       Stores logged results from each test case, including deviation metrics and pass/fail status.
+├── sim/
+│   └── sim_robot_model.py
+│       Implements the `simulate_response()` function to model robot motion and compute measured TCP paths.
+├── tests/
+│   └── test_model_interface.py
+│       Pytest suite for automated execution and validation of test cases.
+├── utils/
+│   └── generate_test_cases.py
+│       Script for generating diverse test cases across the robot's workspace.
+│   └── logger.py
+│       Utility for logging test results and formatting output.
+├── model_interface.py
+│   Main test runner that coordinates controller execution, simulation, evaluation, and logging.
+├── run_tests.py
+│   Entry point for running all tests via pytest.
+├── test_config.yaml
+│   YAML file defining test cases, including joint angles, target poses, velocity profiles, and deviation thresholds.
+
+
+```
 
 ## Key Features:
 
-Function-level evaluation of robot controller output
+1. Function-level evaluation of robot controller output
 
-Simulation-in-loop testing with realistic deviations
+2. Simulation-in-loop testing with realistic deviations
 
-Python automation for scalable test execution
+3. Python automation for scalable test execution
 
-Deviation metrics using Hausdorff and RMSE
+4. Deviation metrics using Hausdorff and RMSE
 
-Pytest integration for clean reporting and CI compatibility
+5. Pytest integration for clean reporting and CI compatibility

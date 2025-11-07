@@ -53,7 +53,24 @@ tests:
     velocity_profile: "fast"
 
 
+## Pytest Integration
+
+```bash
+pytest run_tests.py
+
+
+## Example Assertion
+assert deviation <= threshold_mm, f"{test['name']} failed: deviation={deviation:.2f} mm"
+
 
 ## Key Features:
 
-This framework provides function-level evaluation of robot controller output using a simulation-in-loop methodology. It supports realistic deviation modeling, scalable test execution through Python automation, and robust deviation analysis using Hausdorff distance and RMSE. Integration with pytest ensures clean reporting and compatibility with continuous integration workflows.
+Function-level evaluation of robot controller output
+
+Simulation-in-loop testing with realistic deviations
+
+Python automation for scalable test execution
+
+Deviation metrics using Hausdorff and RMSE
+
+Pytest integration for clean reporting and CI compatibility
